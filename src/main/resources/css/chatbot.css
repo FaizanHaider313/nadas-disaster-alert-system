@@ -1,0 +1,183 @@
+/* =============================================
+   NADAS CHATBOT — Sidebar Style
+   Matches dark glassmorphism theme
+   ============================================= */
+
+/* ── CHATBOT SIDEBAR PANEL ────────────────────── */
+.chatbot-panel {
+    -fx-background-color: rgba(4, 20, 40, 0.92);
+    -fx-border-color: rgba(100, 200, 255, 0.18);
+    -fx-border-width: 0 0 0 1px;
+    -fx-pref-width: 320px;
+    -fx-min-width: 300px;
+    -fx-max-width: 360px;
+}
+
+/* ── CHATBOT HEADER ───────────────────────────── */
+.chatbot-header {
+    -fx-background-color: rgba(10, 40, 80, 0.8);
+    -fx-border-color: transparent transparent rgba(100, 200, 255, 0.15) transparent;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.chatbot-title {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-effect: dropshadow(gaussian, rgba(100,200,255,0.4), 6, 0, 0, 0);
+}
+
+.chatbot-subtitle {
+    -fx-text-fill: rgba(100, 200, 255, 0.55);
+    -fx-font-size: 10px;
+}
+
+/* ── MESSAGES SCROLL AREA ─────────────────────── */
+.chat-scroll {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-color: transparent;
+}
+
+.chat-scroll .viewport {
+    -fx-background-color: transparent;
+}
+
+.chat-scroll .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 4px;
+}
+
+.chat-scroll .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(100, 200, 255, 0.2);
+    -fx-background-radius: 4px;
+}
+
+.chat-scroll .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+.chat-scroll .increment-button,
+.chat-scroll .decrement-button {
+    -fx-background-color: transparent;
+    -fx-pref-height: 0;
+}
+
+/* ── MESSAGE BUBBLES ──────────────────────────── */
+.msg-user {
+    -fx-background-color: rgba(30, 130, 220, 0.35);
+    -fx-background-radius: 14px 14px 4px 14px;
+    -fx-border-color: rgba(100, 200, 255, 0.3);
+    -fx-border-radius: 14px 14px 4px 14px;
+    -fx-border-width: 1px;
+    -fx-padding: 10px 14px;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-wrap-text: true;
+}
+
+.msg-bot {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-background-radius: 14px 14px 14px 4px;
+    -fx-border-color: rgba(100, 200, 255, 0.15);
+    -fx-border-radius: 14px 14px 14px 4px;
+    -fx-border-width: 1px;
+    -fx-padding: 10px 14px;
+    -fx-text-fill: rgba(200, 230, 255, 0.9);
+    -fx-font-size: 12px;
+    -fx-wrap-text: true;
+}
+
+.msg-thinking {
+    -fx-background-color: rgba(255, 255, 255, 0.04);
+    -fx-background-radius: 14px;
+    -fx-padding: 8px 14px;
+    -fx-text-fill: rgba(100, 200, 255, 0.55);
+    -fx-font-size: 11px;
+    -fx-font-style: italic;
+}
+
+/* ── INPUT AREA ───────────────────────────────── */
+.chat-input-area {
+    -fx-background-color: rgba(4, 20, 40, 0.9);
+    -fx-border-color: rgba(100, 200, 255, 0.12) transparent transparent transparent;
+    -fx-border-width: 1px 0 0 0;
+}
+
+.chat-input {
+    -fx-background-color: rgba(255, 255, 255, 0.07);
+    -fx-border-color: rgba(100, 200, 255, 0.25);
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px 14px;
+    -fx-font-size: 12px;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: rgba(150, 200, 255, 0.4);
+}
+
+.chat-input:focused {
+    -fx-border-color: rgba(100, 200, 255, 0.65);
+    -fx-background-color: rgba(255, 255, 255, 0.10);
+    -fx-effect: dropshadow(gaussian, rgba(100, 200, 255, 0.2), 8, 0, 0, 0);
+}
+
+.chat-send-btn {
+    -fx-background-color: linear-gradient(
+        to right,
+        rgba(30, 130, 220, 0.9),
+        rgba(15, 80, 160, 0.9)
+    );
+    -fx-text-fill: white;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px 16px;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-border-color: rgba(100, 200, 255, 0.3);
+    -fx-border-radius: 10px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(30, 130, 220, 0.5), 10, 0, 0, 2);
+}
+
+.chat-send-btn:hover {
+    -fx-background-color: linear-gradient(
+        to right,
+        rgba(50, 160, 255, 0.95),
+        rgba(20, 100, 200, 0.95)
+    );
+    -fx-effect: dropshadow(gaussian, rgba(50, 160, 255, 0.7), 14, 0, 0, 3);
+}
+
+.chat-send-btn:pressed {
+    -fx-translate-y: 1;
+}
+
+/* ── QUICK SUGGESTION CHIPS ───────────────────── */
+.chip-btn {
+    -fx-background-color: rgba(30, 130, 220, 0.15);
+    -fx-text-fill: rgba(100, 200, 255, 0.9);
+    -fx-background-radius: 20px;
+    -fx-border-color: rgba(100, 200, 255, 0.25);
+    -fx-border-radius: 20px;
+    -fx-border-width: 1px;
+    -fx-padding: 4px 12px;
+    -fx-cursor: hand;
+    -fx-font-size: 11px;
+}
+
+.chip-btn:hover {
+    -fx-background-color: rgba(30, 130, 220, 0.3);
+    -fx-text-fill: white;
+    -fx-border-color: rgba(100, 200, 255, 0.5);
+}
+
+/* ── STATUS INDICATOR ─────────────────────────── */
+.chat-status-online {
+    -fx-text-fill: #6bffb8;
+    -fx-font-size: 10px;
+}
+
+.chat-status-thinking {
+    -fx-text-fill: rgba(236, 201, 75, 0.8);
+    -fx-font-size: 10px;
+}

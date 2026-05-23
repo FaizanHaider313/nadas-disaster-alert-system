@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import com.disaster.alert.util.ParticleNetworkCanvas?>
+
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.disaster.alert.controller.SettingsController"
+           stylesheets="@/css/dashboard.css"
+           styleClass="dashboard-root"
+           maxWidth="Infinity" maxHeight="Infinity">
+
+    <!-- Particle animation background -->
+    <ParticleNetworkCanvas/>
+
+    <BorderPane maxWidth="Infinity" maxHeight="Infinity"
+                style="-fx-background-color: transparent;">
+
+        <!-- TOP BAR -->
+        <top>
+            <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="14">
+                <padding><Insets top="13" right="25" bottom="13" left="25"/></padding>
+                <Label text="&#127757;"
+                       style="-fx-font-size: 24px;
+                              -fx-effect: dropshadow(gaussian,rgba(100,200,255,0.7),12,0,0,0);"/>
+                <VBox spacing="1">
+                    <Label text="NADAS" styleClass="app-title-dashboard"/>
+                    <Label text="Natural &amp; Artificial Disaster Alert System"
+                           styleClass="app-subtitle"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="&#8592; Back to Dashboard"
+                        onAction="#handleBackToDashboard"
+                        styleClass="nav-button"/>
+            </HBox>
+        </top>
+
+        <!-- MAIN CONTENT -->
+        <center>
+            <ScrollPane fitToWidth="true" styleClass="content-scroll">
+                <VBox spacing="20" style="-fx-background-color: transparent;">
+                    <padding><Insets top="24" right="30" bottom="24" left="30"/></padding>
+
+                    <!-- Profile Section -->
+                    <VBox styleClass="settings-card" spacing="14">
+                        <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="&#128100;"
+                                   style="-fx-font-size: 16px;
+                                          -fx-effect: dropshadow(gaussian,rgba(100,200,255,0.6),8,0,0,0);"/>
+                            <Label text="Profile Settings"
+                                   styleClass="settings-section-title"/>
+                        </HBox>
+                        <Separator style="-fx-background-color: rgba(100,200,255,0.12);"/>
+                        <HBox spacing="20">
+                            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                <Label text="Full Name" styleClass="login-field-label"/>
+                                <TextField fx:id="nameField"
+                                           promptText="Your name"
+                                           styleClass="login-field"
+                                           maxWidth="Infinity"/>
+                            </VBox>
+                            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                <Label text="Email (read-only)"
+                                       styleClass="login-field-label"/>
+                                <Label fx:id="emailDisplay" text="—"
+                                       styleClass="email-display"/>
+                            </VBox>
+                        </HBox>
+                        <VBox spacing="6">
+                            <Label text="City" styleClass="login-field-label"/>
+                            <ComboBox fx:id="cityComboBox"
+                                      prefWidth="240"
+                                      styleClass="register-combo"/>
+                        </VBox>
+                    </VBox>
+
+                    <!-- Alert Preferences -->
+                    <VBox styleClass="settings-card" spacing="14">
+                        <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="&#9888;"
+                                   style="-fx-font-size: 16px;
+                                          -fx-effect: dropshadow(gaussian,rgba(255,200,50,0.6),8,0,0,0);"/>
+                            <Label text="Alert Preferences"
+                                   styleClass="settings-section-title"/>
+                        </HBox>
+                        <Separator style="-fx-background-color: rgba(100,200,255,0.12);"/>
+                        <Label text="Alert Types" styleClass="login-field-label"/>
+                        <HBox spacing="30">
+                            <CheckBox fx:id="weatherCheckBox"
+                                      text="&#127748; Weather"
+                                      styleClass="register-checkbox"/>
+                            <CheckBox fx:id="earthquakeCheckBox"
+                                      text="&#127755; Earthquake"
+                                      styleClass="register-checkbox"/>
+                            <CheckBox fx:id="fireCheckBox"
+                                      text="&#128293; Fire"
+                                      styleClass="register-checkbox"/>
+                            <CheckBox fx:id="floodCheckBox"
+                                      text="&#127754; Flood"
+                                      styleClass="register-checkbox"/>
+                        </HBox>
+                        <Label text="Minimum Severity" styleClass="login-field-label"/>
+                        <HBox spacing="30">
+                            <RadioButton fx:id="severityLow"
+                                         text="&#128994; Low (all alerts)"
+                                         styleClass="register-checkbox"/>
+                            <RadioButton fx:id="severityMedium"
+                                         text="&#128993; Medium (4.0+)"
+                                         styleClass="register-checkbox"/>
+                            <RadioButton fx:id="severityHigh"
+                                         text="&#128308; High (6.0+ critical)"
+                                         styleClass="register-checkbox"/>
+                        </HBox>
+                    </VBox>
+
+                    <!-- Notification Settings -->
+                    <VBox styleClass="settings-card" spacing="14">
+                        <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="&#128276;"
+                                   style="-fx-font-size: 16px;
+                                          -fx-effect: dropshadow(gaussian,rgba(100,200,255,0.6),8,0,0,0);"/>
+                            <Label text="Notification Settings"
+                                   styleClass="settings-section-title"/>
+                        </HBox>
+                        <Separator style="-fx-background-color: rgba(100,200,255,0.12);"/>
+                        <CheckBox fx:id="emailAlertsCheckBox"
+                                  text="Email Alerts (send all relevant alerts to my email)"
+                                  styleClass="register-checkbox"/>
+                        <CheckBox fx:id="emergencyOnlyCheckBox"
+                                  text="Emergency Only (only High/Critical alerts)"
+                                  styleClass="register-checkbox"/>
+                    </VBox>
+
+                    <!-- Save / Reset -->
+                    <Label fx:id="profileStatusLabel" text=""
+                           visible="false" wrapText="true"/>
+                    <HBox spacing="12">
+                        <Button text="&#10003;  Save Changes"
+                                onAction="#handleSaveProfile"
+                                styleClass="primary-button"/>
+                        <Button text="&#8634;  Reset Defaults"
+                                onAction="#handleResetDefaults"
+                                styleClass="nav-button"/>
+                    </HBox>
+
+                    <!-- Change Password -->
+                    <VBox styleClass="settings-card" spacing="14">
+                        <padding><Insets top="20" right="24" bottom="20" left="24"/></padding>
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Label text="&#128274;"
+                                   style="-fx-font-size: 16px;
+                                          -fx-effect: dropshadow(gaussian,rgba(100,200,255,0.6),8,0,0,0);"/>
+                            <Label text="Change Password"
+                                   styleClass="settings-section-title"/>
+                        </HBox>
+                        <Separator style="-fx-background-color: rgba(100,200,255,0.12);"/>
+                        <HBox spacing="20">
+                            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                <Label text="Current Password"
+                                       styleClass="login-field-label"/>
+                                <PasswordField fx:id="currentPasswordField"
+                                               promptText="Current password"
+                                               styleClass="login-field"
+                                               maxWidth="Infinity"/>
+                            </VBox>
+                            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                <Label text="New Password"
+                                       styleClass="login-field-label"/>
+                                <PasswordField fx:id="newPasswordField"
+                                               promptText="New password"
+                                               styleClass="login-field"
+                                               maxWidth="Infinity"/>
+                            </VBox>
+                            <VBox spacing="6" HBox.hgrow="ALWAYS">
+                                <Label text="Confirm New Password"
+                                       styleClass="login-field-label"/>
+                                <PasswordField fx:id="confirmPasswordField"
+                                               promptText="Confirm new password"
+                                               styleClass="login-field"
+                                               maxWidth="Infinity"/>
+                            </VBox>
+                        </HBox>
+                        <Label fx:id="passwordStatusLabel" text=""
+                               visible="false" wrapText="true"/>
+                        <Button text="&#128274;  Change Password"
+                                onAction="#handleChangePassword"
+                                styleClass="primary-button"/>
+                    </VBox>
+
+                </VBox>
+            </ScrollPane>
+        </center>
+
+        <!-- STATUS BAR -->
+        <bottom>
+            <HBox styleClass="status-bar" alignment="CENTER_LEFT" spacing="10">
+                <padding><Insets top="7" right="20" bottom="7" left="20"/></padding>
+                <Label text="NADAS v2.0  •  Settings" styleClass="status-text"/>
+            </HBox>
+        </bottom>
+
+    </BorderPane>
+</StackPane>

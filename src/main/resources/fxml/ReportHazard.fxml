@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import com.disaster.alert.util.ParticleNetworkCanvas?>
+
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.disaster.alert.controller.ReportHazardController"
+           stylesheets="@/css/dashboard.css"
+           styleClass="dashboard-root"
+           maxWidth="Infinity" maxHeight="Infinity">
+
+    <ParticleNetworkCanvas/>
+
+    <BorderPane maxWidth="Infinity" maxHeight="Infinity"
+                style="-fx-background-color: transparent;">
+
+        <!-- TOP BAR -->
+        <top>
+            <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="14">
+                <padding><Insets top="13" right="25" bottom="13" left="25"/></padding>
+                <Label text="&#127757;"
+                       style="-fx-font-size: 24px;
+                              -fx-effect: dropshadow(gaussian,rgba(100,200,255,0.7),12,0,0,0);"/>
+                <VBox spacing="1">
+                    <Label text="NADAS" styleClass="app-title-dashboard"/>
+                    <Label text="Natural &amp; Artificial Disaster Alert System"
+                           styleClass="app-subtitle"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="backButton"
+                        text="&#8592; Back to Dashboard"
+                        onAction="#handleBack"
+                        styleClass="nav-button"/>
+            </HBox>
+        </top>
+
+        <!-- MAIN CONTENT -->
+        <center>
+            <StackPane style="-fx-background-color: transparent;" alignment="CENTER">
+
+                <VBox spacing="0"
+                      maxWidth="580" minWidth="480"
+                      style="-fx-background-color: rgba(255,255,255,0.05);
+                             -fx-background-radius: 20px;
+                             -fx-border-color: rgba(100,200,255,0.18);
+                             -fx-border-radius: 20px;
+                             -fx-border-width: 1px;
+                             -fx-effect: dropshadow(gaussian,rgba(0,80,200,0.4),40,0,0,12);">
+
+                    <!-- Card Header -->
+                    <HBox alignment="CENTER_LEFT" spacing="14"
+                          style="-fx-background-color: rgba(10,40,80,0.7);
+                                 -fx-background-radius: 20px 20px 0 0;
+                                 -fx-padding: 22px 30px;
+                                 -fx-border-color: transparent transparent rgba(100,200,255,0.15) transparent;
+                                 -fx-border-width: 0 0 1px 0;">
+                        <Label text="&#128680;"
+                               style="-fx-font-size: 28px;
+                                      -fx-effect: dropshadow(gaussian,rgba(100,200,255,0.7),10,0,0,0);"/>
+                        <VBox spacing="4">
+                            <Label text="Report a Hazard"
+                                   style="-fx-text-fill: white;
+                                          -fx-font-weight: bold;
+                                          -fx-font-size: 20px;
+                                          -fx-effect: dropshadow(gaussian,rgba(100,200,255,0.4),8,0,0,0);"/>
+                            <Label text="Help your community — your report goes to admin for review"
+                                   style="-fx-text-fill: rgba(100,200,255,0.55);
+                                          -fx-font-size: 11px;"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Form Fields -->
+                    <VBox spacing="18">
+                        <padding><Insets top="28" right="32" bottom="10" left="32"/></padding>
+
+                        <!-- Hazard Type -->
+                        <VBox spacing="7">
+                            <HBox spacing="6" alignment="CENTER_LEFT">
+                                <Label text="&#9889;"
+                                       style="-fx-font-size: 13px;
+                                              -fx-text-fill: rgba(255,100,100,0.9);"/>
+                                <Label text="Hazard Type"
+                                       style="-fx-text-fill: white;
+                                              -fx-font-weight: bold;
+                                              -fx-font-size: 13px;"/>
+                                <Label text="*"
+                                       style="-fx-text-fill: rgba(255,100,100,0.8);
+                                              -fx-font-weight: bold;"/>
+                            </HBox>
+                            <ComboBox fx:id="hazardTypeCombo"
+                                      maxWidth="Infinity"
+                                      promptText="Select hazard type"
+                                      styleClass="register-combo"/>
+                        </VBox>
+
+                        <!-- Location -->
+                        <VBox spacing="7">
+                            <HBox spacing="6" alignment="CENTER_LEFT">
+                                <Label text="&#128205;"
+                                       style="-fx-font-size: 13px;
+                                              -fx-text-fill: rgba(100,200,255,0.9);"/>
+                                <Label text="Location"
+                                       style="-fx-text-fill: white;
+                                              -fx-font-weight: bold;
+                                              -fx-font-size: 13px;"/>
+                                <Label text="*"
+                                       style="-fx-text-fill: rgba(255,100,100,0.8);
+                                              -fx-font-weight: bold;"/>
+                            </HBox>
+                            <ComboBox fx:id="locationCombo"
+                                      maxWidth="Infinity"
+                                      editable="true"
+                                      promptText="Select or type your city"
+                                      styleClass="register-combo"/>
+                        </VBox>
+
+                        <!-- Description -->
+                        <VBox spacing="7">
+                            <HBox spacing="6" alignment="CENTER_LEFT">
+                                <Label text="&#128221;"
+                                       style="-fx-font-size: 13px;
+                                              -fx-text-fill: rgba(160,120,255,0.9);"/>
+                                <Label text="Description"
+                                       style="-fx-text-fill: white;
+                                              -fx-font-weight: bold;
+                                              -fx-font-size: 13px;"/>
+                                <Label text="*"
+                                       style="-fx-text-fill: rgba(255,100,100,0.8);
+                                              -fx-font-weight: bold;"/>
+                            </HBox>
+                            <TextArea fx:id="descriptionArea"
+                                      promptText="Describe what you observed in detail (minimum 10 characters)..."
+                                      wrapText="true"
+                                      prefRowCount="4"
+                                      style="-fx-background-color: rgba(255,255,255,0.07);
+                                             -fx-border-color: rgba(100,200,255,0.25);
+                                             -fx-border-radius: 10px;
+                                             -fx-background-radius: 10px;
+                                             -fx-padding: 10px 14px;
+                                             -fx-font-size: 13px;
+                                             -fx-text-fill: white;
+                                             -fx-prompt-text-fill: rgba(150,200,255,0.45);
+                                             -fx-control-inner-background: rgba(10,30,60,0.8);">
+                                <font><Font size="13"/></font>
+                            </TextArea>
+                        </VBox>
+
+                        <!-- Photo Evidence -->
+                        <VBox spacing="7">
+                            <HBox spacing="6" alignment="CENTER_LEFT">
+                                <Label text="&#128247;"
+                                       style="-fx-font-size: 13px;
+                                              -fx-text-fill: rgba(100,220,150,0.9);"/>
+                                <Label text="Photo Evidence"
+                                       style="-fx-text-fill: white;
+                                              -fx-font-weight: bold;
+                                              -fx-font-size: 13px;"/>
+                                <Label text="(Optional)"
+                                       style="-fx-text-fill: rgba(100,180,255,0.45);
+                                              -fx-font-size: 11px;"/>
+                            </HBox>
+                            <HBox spacing="12" alignment="CENTER_LEFT"
+                                  style="-fx-background-color: rgba(255,255,255,0.04);
+                                         -fx-border-color: rgba(100,200,255,0.2);
+                                         -fx-border-radius: 10px;
+                                         -fx-background-radius: 10px;
+                                         -fx-padding: 10px 14px;">
+                                <Button text="&#128247;  Choose Photo"
+                                        onAction="#handleChoosePhoto"
+                                        styleClass="nav-button"/>
+                                <Label fx:id="photoPathLabel"
+                                       text="No photo selected"
+                                       style="-fx-text-fill: rgba(100,180,255,0.45);
+                                              -fx-font-size: 12px;
+                                              -fx-font-style: italic;"/>
+                            </HBox>
+                        </VBox>
+
+                    </VBox>
+
+                    <!-- Divider -->
+                    <Separator style="-fx-background-color: rgba(100,200,255,0.12);">
+                        <VBox.margin><Insets top="20" right="32" bottom="0" left="32"/></VBox.margin>
+                    </Separator>
+
+                    <!-- Status Label -->
+                    <VBox>
+                        <padding><Insets top="12" right="32" bottom="0" left="32"/></padding>
+                        <Label fx:id="statusLabel" text=""
+                               wrapText="true" visible="false"
+                               style="-fx-font-size: 12px;
+                                      -fx-font-weight: bold;
+                                      -fx-padding: 8px 12px;
+                                      -fx-background-radius: 8px;">
+                            <font><Font size="12"/></font>
+                        </Label>
+                    </VBox>
+
+                    <!-- Buttons -->
+                    <HBox spacing="12" alignment="CENTER">
+                        <padding><Insets top="16" right="32" bottom="28" left="32"/></padding>
+                        <Button fx:id="submitButton"
+                                text="&#128228;  Submit Report"
+                                onAction="#handleSubmit"
+                                styleClass="primary-button"
+                                prefWidth="200">
+                            <font><Font name="System Bold" size="13"/></font>
+                        </Button>
+                        <Button text="&#10006;  Clear Form"
+                                onAction="#handleClear"
+                                styleClass="nav-button"
+                                prefWidth="140"/>
+                    </HBox>
+
+                    <!-- Bottom info strip -->
+                    <HBox alignment="CENTER_LEFT" spacing="8"
+                          style="-fx-background-color: rgba(50,200,120,0.06);
+                                 -fx-background-radius: 0 0 20px 20px;
+                                 -fx-border-color: rgba(100,255,180,0.12) transparent transparent transparent;
+                                 -fx-border-width: 1px;
+                                 -fx-padding: 12px 32px;">
+                        <Label text="&#128274;"
+                               style="-fx-font-size: 13px;
+                                      -fx-text-fill: rgba(100,255,180,0.7);"/>
+                        <Label text="Reports are reviewed by admin before becoming official alerts. You will see it in the Approved section once verified."
+                               style="-fx-text-fill: rgba(100,220,160,0.65);
+                                      -fx-font-size: 11px;"
+                               wrapText="true"/>
+                    </HBox>
+
+                </VBox>
+            </StackPane>
+        </center>
+
+        <!-- STATUS BAR -->
+        <bottom>
+            <HBox styleClass="status-bar" alignment="CENTER_LEFT" spacing="10">
+                <padding><Insets top="7" right="20" bottom="7" left="20"/></padding>
+                <Label text="NADAS v2.0  •  Report a Hazard"
+                       styleClass="status-text"/>
+            </HBox>
+        </bottom>
+
+    </BorderPane>
+</StackPane>

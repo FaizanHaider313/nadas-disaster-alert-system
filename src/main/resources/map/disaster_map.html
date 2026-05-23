@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NADAS Disaster Map</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <!-- Leaflet Heatmap plugin -->
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+          background: #0f3443;
+          font-family: 'Segoe UI', sans-serif;
+        }
+
+        #map {
+          width: 100%;
+          height: 100vh;
+        }
+
+        /* Legend */
+        .legend {
+          background: rgba(15, 52, 67, 0.92);
+          border: 1px solid rgba(255,255,255,0.15);
+          border-radius: 10px;
+          padding: 12px 16px;
+          color: white;
+          font-size: 12px;
+          min-width: 160px;
+          backdrop-filter: blur(6px);
+        }
+
+        .legend h4 {
+          margin-bottom: 8px;
+          font-size: 13px;
+          color: #7ecece;
+          border-bottom: 1px solid rgba(255,255,255,0.15);
+          padding-bottom: 6px;
+        }
+
+        .legend-item {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin: 5px 0;
+        }
+
+        .legend-dot {
+          width: 12px;
+          height: 12px;
+          border-radius: 50%;
+          flex-shrink: 0;
+        }
+
+        /* Loading overlay */
+        #loading {
+          position: fixed;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
+          background: #0f3443;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          z-index: 9999;
+          color: white;
+          gap: 16px;
+        }
+
+        .spinner {
+          width: 40px; height: 40px;
+          border: 3px solid rgba(255,255,255,0.15);
+          border-top: 3px solid #2d9b9b;
+          border-radius: 50%;
+          animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+
+        #loading p {
+          color: #7ecece;
+          font-size: 13px;
+        }
+
+        /* Custom popup */
+        .leaflet-popup-content-wrapper {
+          background: #0f3443 !important;
+          border: 1px solid rgba(45,155,155,0.5) !important;
+          border-radius: 10px !important;
+          color: white !important;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.4) !important;
+        }
+
+        .leaflet-popup-tip {
+          background: #0f3443 !important;
+        }
+
+        .leaflet-popup-content {
+          color: white !important;
+          font-family: 'Segoe UI', sans-serif !important;
+          font-size: 13px !important;
+          line-height: 1.6 !important;
+          margin: 12px 16px !important;
+        }
+
+        .popup-title {
+          font-weight: bold;
+          font-size: 14px;
+          color: #7ecece;
+          margin-bottom: 6px;
+        }
+
+        .popup-row {
+          display: flex;
+          gap: 6px;
+          margin: 3px 0;
+          font-size: 12px;
+        }
+
+        .popup-label {
+          color: #a0aec0;
+          min-width: 70px;
+        }
+
+        .popup-value {
+          color: #e2e8f0;
+        }
+
+        .popup-badge {
+          display: inline-block;
+          padding: 2px 8px;
+          border-radius: 10px;
+          font-size: 11px;
+          font-weight: bold;
+          margin-top: 6px;
+        }
+
+        .badge-high   { background: #c53030; color: white; }
+        .badge-medium { background: #dd6b20; color: white; }
+        .badge-low    { background: #276749; color: white; }
+        .badge-report { background: #553c9a; color: white; }
+    </style>
+</head>
+<body>
+
+<div id="loading">
+    <div class="spinner"></div>
+    <p>Loading NADAS Disaster Map...</p>
+</div>
+
+<div id="map"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Marker cluster -->
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<!-- Leaflet heat -->
+<script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+
+<script>
+    // ── Init map centered on Pakistan ──────────────────────────────────────
+    const map = L.map('map', {
+      center: [30.3753, 69.3451],
+      zoom: 4,
+      zoomControl: true,
+      attributionControl: true
+    });
+
+    // Dark tile layer (CartoDB dark matter — no API key needed)
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '&copy; <a href="https://carto.com/">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 19
+    }).addTo(map);
+
+    // ── Layer groups ────────────────────────────────────────────────────────
+    const earthquakeLayer = L.layerGroup().addTo(map);
+    const reportLayer     = L.layerGroup().addTo(map);
+    let   heatLayer       = null;
+
+    // ── Severity color helper ───────────────────────────────────────────────
+    function quakeColor(mag) {
+      if (mag >= 7)  return '#e53e3e'; // deep red
+      if (mag >= 6)  return '#fc5c5c'; // red
+      if (mag >= 5)  return '#ed8936'; // orange
+      if (mag >= 4)  return '#ecc94b'; // yellow
+      if (mag >= 3)  return '#68d391'; // green
+      return '#a0aec0';                // grey - minor
+    }
+
+    function quakeRadius(mag) {
+      if (mag >= 7)  return 22;
+      if (mag >= 6)  return 17;
+      if (mag >= 5)  return 13;
+      if (mag >= 4)  return 9;
+      if (mag >= 3)  return 6;
+      return 4;
+    }
+
+    function severityBadge(mag) {
+      if (mag >= 6)  return '<span class="popup-badge badge-high">HIGH</span>';
+      if (mag >= 4)  return '<span class="popup-badge badge-medium">MEDIUM</span>';
+      return '<span class="popup-badge badge-low">LOW</span>';
+    }
+
+    function timeAgo(ms) {
+      const diff = Date.now() - ms;
+      const min  = Math.floor(diff / 60000);
+      const hr   = Math.floor(diff / 3600000);
+      const day  = Math.floor(diff / 86400000);
+      if (min < 60)  return min + ' min ago';
+      if (hr  < 24)  return hr  + ' hr ago';
+      return day + ' day(s) ago';
+    }
+
+    // ── Load earthquake data from USGS ─────────────────────────────────────
+    const heatPoints = [];
+
+    fetch('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson')
+      .then(r => r.json())
+      .then(data => {
+        const features = data.features || [];
+
+        features.forEach(f => {
+          const props = f.properties;
+          const coords = f.geometry.coordinates; // [lon, lat, depth]
+          if (!coords) return;
+
+          const lat  = coords[1];
+          const lon  = coords[0];
+          const mag  = props.mag  || 0;
+          const place = props.place || 'Unknown';
+          const time  = props.time  || 0;
+
+          // Heat point (intensity = magnitude / 10)
+          heatPoints.push([lat, lon, Math.min(mag / 10, 1.0)]);
+
+          // Circle marker
+          const circle = L.circleMarker([lat, lon], {
+            radius:      quakeRadius(mag),
+            fillColor:   quakeColor(mag),
+            color:       'rgba(255,255,255,0.3)',
+            weight:      1,
+            opacity:     1,
+            fillOpacity: 0.75
+          });
+
+          circle.bindPopup(`
+            <div class="popup-title">Earthquake</div>
+            <div class="popup-row">
+              <span class="popup-label">Location</span>
+              <span class="popup-value">${place}</span>
+            </div>
+            <div class="popup-row">
+              <span class="popup-label">Magnitude</span>
+              <span class="popup-value">${mag.toFixed(1)}</span>
+            </div>
+            <div class="popup-row">
+              <span class="popup-label">Depth</span>
+              <span class="popup-value">${coords[2].toFixed(1)} km</span>
+            </div>
+            <div class="popup-row">
+              <span class="popup-label">Time</span>
+              <span class="popup-value">${timeAgo(time)}</span>
+            </div>
+            ${severityBadge(mag)}
+          `);
+
+          earthquakeLayer.addLayer(circle);
+        });
+
+        // Add heatmap layer
+        if (heatPoints.length > 0) {
+          heatLayer = L.heatLayer(heatPoints, {
+            radius:  25,
+            blur:    18,
+            maxZoom: 10,
+            max:     1.0,
+            gradient: {
+              0.0: '#2d9b9b',
+              0.3: '#ecc94b',
+              0.6: '#ed8936',
+              0.9: '#e53e3e',
+              1.0: '#9b2335'
+            }
+          }).addTo(map);
+        }
+
+        document.getElementById('loading').style.display = 'none';
+      })
+      .catch(err => {
+        console.error('Earthquake data error:', err);
+        document.getElementById('loading').style.display = 'none';
+      });
+
+    // ── Citizen report pins (injected by Java) ─────────────────────────────
+    // Java calls: addCitizenReport(lat, lon, type, location, description, time)
+    function addCitizenReport(lat, lon, hazardType, location, description, time) {
+      const icon = L.divIcon({
+        html: `<div style="
+          background: linear-gradient(135deg,#553c9a,#805ad5);
+          width: 28px; height: 28px;
+          border-radius: 50% 50% 50% 0;
+          transform: rotate(-45deg);
+          border: 2px solid white;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        "></div>`,
+        className: '',
+        iconSize:   [28, 28],
+        iconAnchor: [14, 28],
+        popupAnchor:[0, -30]
+      });
+
+      const marker = L.marker([lat, lon], { icon });
+      marker.bindPopup(`
+        <div class="popup-title">Citizen Report — Admin Approved</div>
+        <div class="popup-row">
+          <span class="popup-label">Type</span>
+          <span class="popup-value">${hazardType}</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-label">Location</span>
+          <span class="popup-value">${location}</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-label">Details</span>
+          <span class="popup-value">${description}</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-label">Reported</span>
+          <span class="popup-value">${time}</span>
+        </div>
+        <span class="popup-badge badge-report">CITIZEN REPORT</span>
+      `);
+
+      reportLayer.addLayer(marker);
+    }
+
+    // ── Layer toggle (called from Java) ────────────────────────────────────
+    function toggleHeatmap(show) {
+      if (!heatLayer) return;
+      if (show) map.addLayer(heatLayer);
+      else      map.removeLayer(heatLayer);
+    }
+
+    function toggleEarthquakes(show) {
+      if (show) map.addLayer(earthquakeLayer);
+      else      map.removeLayer(earthquakeLayer);
+    }
+
+    function toggleReports(show) {
+      if (show) map.addLayer(reportLayer);
+      else      map.removeLayer(reportLayer);
+    }
+
+    // ── Legend control ─────────────────────────────────────────────────────
+    const legend = L.control({ position: 'bottomright' });
+    legend.onAdd = function() {
+      const div = L.DomUtil.create('div', 'legend');
+      div.innerHTML = `
+        <h4>MAP LEGEND</h4>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#e53e3e;"></div>
+          <span>Earthquake M7+</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#ed8936;"></div>
+          <span>Earthquake M5-6</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#ecc94b;"></div>
+          <span>Earthquake M4-5</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#68d391;"></div>
+          <span>Earthquake M3-4</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-dot" style="background:#805ad5;"></div>
+          <span>Citizen Report</span>
+        </div>
+      `;
+      return div;
+    };
+    legend.addTo(map);
+
+    // ── Info box (top left) ────────────────────────────────────────────────
+    const info = L.control({ position: 'topleft' });
+    info.onAdd = function() {
+      const div = L.DomUtil.create('div', 'legend');
+      div.innerHTML = `
+        <h4>NADAS LIVE MAP</h4>
+        <div style="color:#a0aec0; font-size:11px; line-height:1.6;">
+          Live earthquake data from USGS<br/>
+          Citizen reports from NADAS DB<br/>
+          Click any marker for details
+        </div>
+      `;
+      return div;
+    };
+    info.addTo(map);
+</script>
+</body>
+</html>

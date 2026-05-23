@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.web.WebView?>
+<?import com.disaster.alert.util.ParticleNetworkCanvas?>
+
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.disaster.alert.controller.DashboardController"
+           stylesheets="@/css/dashboard.css"
+           maxWidth="Infinity" maxHeight="Infinity"
+           styleClass="dashboard-root">
+
+    <!-- Particle network animation layer (behind everything) -->
+    <ParticleNetworkCanvas/>
+
+    <!-- Full dashboard layout on top -->
+    <BorderPane maxWidth="Infinity" maxHeight="Infinity"
+                style="-fx-background-color: transparent;">
+
+        <!-- TOP BAR -->
+        <top>
+            <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="14">
+                <padding><Insets top="13" right="25" bottom="13" left="25"/></padding>
+
+                <!-- Logo -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Label text="&#127757;" style="-fx-font-size: 24px;
+                        -fx-effect: dropshadow(gaussian, rgba(100,200,255,0.7), 12, 0, 0, 0);"/>
+                    <VBox spacing="1">
+                        <Label text="NADAS" styleClass="app-title-dashboard"/>
+                        <Label text="Natural &amp; Artificial Disaster Alert System"
+                               styleClass="app-subtitle"/>
+                    </VBox>
+                </HBox>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <!-- Guest buttons -->
+                <HBox fx:id="authButtons" spacing="10" alignment="CENTER">
+                    <Button fx:id="loginButton"    text="Login"
+                            onAction="#handleLogin"    styleClass="secondary-button"/>
+                    <Button fx:id="registerButton" text="Register"
+                            onAction="#handleRegister" styleClass="primary-button"/>
+                </HBox>
+
+                <!-- Logged-in welcome -->
+                <HBox fx:id="userInfo" spacing="6" alignment="CENTER"
+                      visible="false" managed="false">
+                    <Label fx:id="userNameLabel" text="Welcome!"
+                           styleClass="user-name"/>
+                </HBox>
+
+                <!-- Logged-in nav -->
+                <HBox fx:id="loggedInNav" spacing="8" alignment="CENTER"
+                      visible="false" managed="false">
+                    <Button text="&#9881; Settings"
+                            onAction="#handleSettings"     styleClass="nav-button"/>
+                    <Button text="&#128203; My Reports"
+                            onAction="#handleReportHazard" styleClass="nav-button"/>
+                    <Button text="&#128200; History"
+                            onAction="#handleAlertHistory" styleClass="nav-button"/>
+                    <Button text="&#127748; Weather"
+                            onAction="#handleWeather"      styleClass="nav-button"/>
+                    <Button text="&#128274; Admin"
+                            onAction="#handleAdmin"        styleClass="nav-button"/>
+                    <Button fx:id="logoutButton" text="&#128274; Logout"
+                            onAction="#handleLogout"       styleClass="logout-button"/>
+                </HBox>
+            </HBox>
+        </top>
+
+        <!-- MAIN CONTENT — dashboard + chatbot side by side -->
+        <center>
+            <HBox maxWidth="Infinity" maxHeight="Infinity">
+
+                <!-- ── LEFT: Main dashboard scroll content ── -->
+                <ScrollPane fitToWidth="true" styleClass="content-scroll"
+                            HBox.hgrow="ALWAYS">
+                    <VBox spacing="18" styleClass="main-content">
+                        <padding><Insets top="22" right="25" bottom="22" left="25"/></padding>
+
+                        <!-- Location banner -->
+                        <HBox styleClass="location-banner" alignment="CENTER_LEFT" spacing="12">
+                            <padding><Insets top="12" right="20" bottom="12" left="20"/></padding>
+                            <Label text="&#128205;"
+                                   style="-fx-font-size: 16px;
+                                          -fx-effect: dropshadow(gaussian,rgba(100,200,255,0.6),8,0,0,0);"/>
+                            <VBox spacing="2">
+                                <Label fx:id="locationLabel"
+                                       text="Showing Global Data"
+                                       styleClass="location-label"/>
+                                <Label fx:id="locationSubLabel"
+                                       text="Login to see personalised alerts for your city"
+                                       styleClass="info-label"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- LIVE MAP -->
+                        <VBox spacing="0"
+                              style="-fx-background-color: rgba(255,255,255,0.04);
+                                     -fx-background-radius: 16px;
+                                     -fx-border-color: rgba(100,200,255,0.15);
+                                     -fx-border-radius: 16px;
+                                     -fx-border-width: 1px;
+                                     -fx-effect: dropshadow(gaussian,rgba(0,80,180,0.35),20,0,0,6);">
+
+                            <!-- Map header -->
+                            <HBox alignment="CENTER_LEFT" spacing="12"
+                                  style="-fx-background-color: rgba(10,40,80,0.7);
+                                         -fx-background-radius: 16px 16px 0 0;
+                                         -fx-padding: 13px 20px;
+                                         -fx-border-color: transparent transparent rgba(100,200,255,0.12) transparent;
+                                         -fx-border-width: 0 0 1px 0;">
+                                <Label text="&#127758;"
+                                       style="-fx-font-size: 18px;
+                                              -fx-effect: dropshadow(gaussian,rgba(100,200,255,0.6),8,0,0,0);"/>
+                                <VBox spacing="2">
+                                    <Label text="Live Disaster Map"
+                                           style="-fx-text-fill: white;
+                                                  -fx-font-weight: bold;
+                                                  -fx-font-size: 15px;
+                                                  -fx-effect: dropshadow(gaussian,rgba(100,200,255,0.4),6,0,0,0);"/>
+                                    <Label text="Real-time earthquakes from USGS + Approved citizen reports"
+                                           style="-fx-text-fill: rgba(100,200,255,0.55);
+                                                  -fx-font-size: 10px;"/>
+                                </VBox>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Button text="&#127755; Earthquakes"
+                                        onAction="#handleToggleEarthquakes"
+                                        fx:id="toggleEqButton"
+                                        styleClass="nav-button"/>
+                                <Button text="&#128280; Heatmap"
+                                        onAction="#handleToggleHeatmap"
+                                        fx:id="toggleHeatButton"
+                                        styleClass="nav-button"/>
+                                <Button text="&#128204; Reports"
+                                        onAction="#handleToggleReports"
+                                        fx:id="toggleReportsButton"
+                                        styleClass="nav-button"/>
+                            </HBox>
+
+                            <!-- Map WebView -->
+                            <WebView fx:id="mapWebView"
+                                     prefHeight="420"
+                                     minHeight="380"
+                                     maxHeight="480"
+                                     style="-fx-background-radius: 0 0 16px 16px;"/>
+                        </VBox>
+
+                        <!-- Info cards -->
+                        <HBox spacing="15">
+                            <!-- Weather -->
+                            <VBox styleClass="info-card weather-card" spacing="8"
+                                  HBox.hgrow="ALWAYS">
+                                <padding><Insets top="18" right="18" bottom="18" left="18"/></padding>
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <Label text="&#127748;"
+                                           style="-fx-font-size: 20px;
+                                                  -fx-effect: dropshadow(gaussian,rgba(66,153,225,0.7),8,0,0,0);"/>
+                                    <Label text="Weather" styleClass="card-title"/>
+                                </HBox>
+                                <Separator styleClass="card-separator"/>
+                                <Label fx:id="weatherTemp" text="Temperature: --"
+                                       styleClass="card-data"/>
+                                <Label fx:id="weatherDesc" text="Condition: Loading..."
+                                       styleClass="card-data"/>
+                                <Label fx:id="weatherCity" text="Location: --"
+                                       styleClass="card-data-small"/>
+                            </VBox>
+
+                            <!-- Earthquakes -->
+                            <VBox styleClass="info-card earthquake-card" spacing="8"
+                                  HBox.hgrow="ALWAYS">
+                                <padding><Insets top="18" right="18" bottom="18" left="18"/></padding>
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <Label text="&#127755;"
+                                           style="-fx-font-size: 20px;
+                                                  -fx-effect: dropshadow(gaussian,rgba(237,137,54,0.7),8,0,0,0);"/>
+                                    <Label text="Earthquakes" styleClass="card-title"/>
+                                </HBox>
+                                <Separator styleClass="card-separator"/>
+                                <Label fx:id="earthquakeMag" text="Magnitude: --"
+                                       styleClass="card-data"/>
+                                <Label fx:id="earthquakeLocation" text="Location: Loading..."
+                                       styleClass="card-data"/>
+                                <Label fx:id="earthquakeTime" text="Time: --"
+                                       styleClass="card-data-small"/>
+                            </VBox>
+
+                            <!-- News -->
+                            <VBox styleClass="info-card news-card" spacing="8"
+                                  HBox.hgrow="ALWAYS">
+                                <padding><Insets top="18" right="18" bottom="18" left="18"/></padding>
+                                <HBox spacing="10" alignment="CENTER_LEFT">
+                                    <Label text="&#128240;"
+                                           style="-fx-font-size: 20px;
+                                                  -fx-effect: dropshadow(gaussian,rgba(159,122,234,0.7),8,0,0,0);"/>
+                                    <Label text="Latest News" styleClass="card-title"/>
+                                </HBox>
+                                <Separator styleClass="card-separator"/>
+                                <Label fx:id="newsHeadline" text="Loading..."
+                                       styleClass="card-data" wrapText="true"/>
+                                <Label fx:id="newsSource" text="Source: --"
+                                       styleClass="card-data-small"/>
+                            </VBox>
+                        </HBox>
+
+                        <!-- Approved Citizen Reports -->
+                        <VBox spacing="10">
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label text="&#128680;"
+                                       style="-fx-font-size: 16px;
+                                              -fx-effect: dropshadow(gaussian,rgba(100,200,255,0.5),6,0,0,0);"/>
+                                <Label text="Approved Citizen Reports"
+                                       styleClass="section-title"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label text="&#10003;  Admin Verified"
+                                       style="-fx-background-color: rgba(50,200,120,0.15);
+                                              -fx-text-fill: #6bffb8;
+                                              -fx-padding: 3px 12px;
+                                              -fx-background-radius: 12px;
+                                              -fx-font-size: 11px;
+                                              -fx-font-weight: bold;
+                                              -fx-border-color: rgba(100,255,180,0.25);
+                                              -fx-border-radius: 12px;
+                                              -fx-border-width: 1px;"/>
+                            </HBox>
+                            <TableView fx:id="approvedReportsTable"
+                                       styleClass="alerts-table"
+                                       maxHeight="220" maxWidth="Infinity">
+                                <columns>
+                                    <TableColumn fx:id="arTypeColumn"
+                                                 text="Hazard Type" prefWidth="150"/>
+                                    <TableColumn fx:id="arLocationColumn"
+                                                 text="Location"    prefWidth="200"/>
+                                    <TableColumn fx:id="arDescColumn"
+                                                 text="Description" prefWidth="200"/>
+                                    <TableColumn fx:id="arTimeColumn"
+                                                 text="Reported"    prefWidth="150"/>
+                                </columns>
+                                <placeholder>
+                                    <Label text="No approved citizen reports yet."
+                                           styleClass="table-placeholder"/>
+                                </placeholder>
+                            </TableView>
+                        </VBox>
+
+                        <!-- Latest Disaster Alerts -->
+                        <VBox spacing="10" VBox.vgrow="ALWAYS">
+                            <HBox alignment="CENTER_LEFT" spacing="10">
+                                <Label text="&#127760;"
+                                       style="-fx-font-size: 16px;
+                                              -fx-effect: dropshadow(gaussian,rgba(100,200,255,0.5),6,0,0,0);"/>
+                                <Label text="Latest Disaster Alerts"
+                                       styleClass="section-title"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label text="Global Feed" styleClass="feed-badge"/>
+                            </HBox>
+                            <TableView fx:id="alertsTable" styleClass="alerts-table"
+                                       VBox.vgrow="ALWAYS" maxHeight="Infinity"
+                                       maxWidth="Infinity">
+                                <columns>
+                                    <TableColumn fx:id="typeColumn"
+                                                 text="Type"     prefWidth="130"/>
+                                    <TableColumn fx:id="locationColumn"
+                                                 text="Location" prefWidth="280"/>
+                                    <TableColumn fx:id="severityColumn"
+                                                 text="Severity" prefWidth="110"/>
+                                    <TableColumn fx:id="timeColumn"
+                                                 text="Time"     prefWidth="150"/>
+                                </columns>
+                                <placeholder>
+                                    <Label text="Loading alerts..."
+                                           styleClass="table-placeholder"/>
+                                </placeholder>
+                            </TableView>
+                        </VBox>
+
+                        <!-- Bottom row -->
+                        <HBox alignment="CENTER_RIGHT" spacing="15">
+                            <Label fx:id="statusLabel" text="&#128994; Connected"
+                                   styleClass="status-chip"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="refreshButton" text="&#128260;  Refresh Data"
+                                    onAction="#handleRefresh"
+                                    styleClass="refresh-button"/>
+                        </HBox>
+
+                    </VBox>
+                </ScrollPane>
+
+                <!-- ── RIGHT: Chatbot sidebar ── -->
+                <fx:include source="/fxml/Chatbot.fxml"/>
+
+            </HBox>
+        </center>
+
+        <!-- STATUS BAR -->
+        <bottom>
+            <HBox styleClass="status-bar" alignment="CENTER_LEFT" spacing="10">
+                <padding><Insets top="7" right="20" bottom="7" left="20"/></padding>
+                <Label text="NADAS v2.0  •  Real-time Disaster Monitoring  •  SQLite DB"
+                       styleClass="status-text"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Label fx:id="lastUpdateLabel" text="Last updated: --"
+                       styleClass="status-text"/>
+            </HBox>
+        </bottom>
+
+    </BorderPane>
+</StackPane>

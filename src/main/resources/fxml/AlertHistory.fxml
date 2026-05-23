@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import com.disaster.alert.util.ParticleNetworkCanvas?>
+
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.disaster.alert.controller.AlertHistoryController"
+           stylesheets="@/css/dashboard.css"
+           styleClass="dashboard-root"
+           maxWidth="Infinity" maxHeight="Infinity">
+
+    <ParticleNetworkCanvas/>
+
+    <BorderPane maxWidth="Infinity" maxHeight="Infinity"
+                style="-fx-background-color: transparent;">
+
+        <!-- TOP BAR -->
+        <top>
+            <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="14">
+                <padding><Insets top="13" right="25" bottom="13" left="25"/></padding>
+                <Label text="&#128200;"
+                       style="-fx-font-size: 22px;
+                              -fx-effect: dropshadow(gaussian,rgba(100,200,255,0.7),12,0,0,0);"/>
+                <VBox spacing="1">
+                    <Label text="NADAS" styleClass="app-title-dashboard"/>
+                    <Label text="Alert History &amp; Logs" styleClass="app-subtitle"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button fx:id="backButton"
+                        text="&#8592; Dashboard"
+                        onAction="#handleBack"
+                        styleClass="nav-button"/>
+            </HBox>
+        </top>
+
+        <!-- MAIN CONTENT -->
+        <center>
+            <VBox spacing="14" style="-fx-background-color: transparent;">
+                <padding><Insets top="20" right="25" bottom="20" left="25"/></padding>
+
+                <!-- Filters row -->
+                <HBox spacing="12" alignment="CENTER_LEFT"
+                      style="-fx-background-color: rgba(255,255,255,0.05);
+                             -fx-background-radius: 12px;
+                             -fx-border-color: rgba(100,200,255,0.15);
+                             -fx-border-radius: 12px;
+                             -fx-border-width: 1px;
+                             -fx-effect: dropshadow(gaussian,rgba(0,80,180,0.2),12,0,0,3);">
+                    <padding><Insets top="12" right="15" bottom="12" left="15"/></padding>
+
+                    <TextField fx:id="searchField"
+                               promptText="&#128269; Search by location, type..."
+                               styleClass="login-field"
+                               prefWidth="240"/>
+                    <Button text="Search"
+                            onAction="#handleSearch"
+                            styleClass="primary-button"/>
+
+                    <Separator orientation="VERTICAL"
+                               style="-fx-pref-height: 28px;
+                                      -fx-background-color: rgba(100,200,255,0.2);"/>
+
+                    <Label text="Type:" styleClass="login-field-label"/>
+                    <ComboBox fx:id="typeFilterCombo"
+                              prefWidth="140"
+                              styleClass="register-combo"/>
+
+                    <Label text="Severity:" styleClass="login-field-label"/>
+                    <ComboBox fx:id="severityFilterCombo"
+                              prefWidth="130"
+                              styleClass="register-combo"/>
+
+                    <Button text="Filter"
+                            onAction="#handleFilter"
+                            styleClass="primary-button"/>
+                    <Button text="Clear"
+                            onAction="#handleClearFilters"
+                            styleClass="nav-button"/>
+
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="countLabel"
+                           text="Showing 0 alert(s)"
+                           styleClass="feed-badge"/>
+                </HBox>
+
+                <!-- Table -->
+                <TableView fx:id="alertsTable"
+                           styleClass="alerts-table"
+                           VBox.vgrow="ALWAYS"
+                           maxHeight="Infinity" maxWidth="Infinity">
+                    <columns>
+                        <TableColumn fx:id="typeColumn"
+                                     text="Type"     prefWidth="120"/>
+                        <TableColumn fx:id="locationColumn"
+                                     text="Location" prefWidth="300"/>
+                        <TableColumn fx:id="severityColumn"
+                                     text="Severity" prefWidth="120"/>
+                        <TableColumn fx:id="sourceColumn"
+                                     text="Source"   prefWidth="130"/>
+                        <TableColumn fx:id="timeColumn"
+                                     text="Time"     prefWidth="160"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="No alerts in history yet. Use Refresh Data on the dashboard to load alerts."
+                               styleClass="table-placeholder" wrapText="true"/>
+                    </placeholder>
+                </TableView>
+
+            </VBox>
+        </center>
+
+        <!-- STATUS BAR -->
+        <bottom>
+            <HBox styleClass="status-bar" alignment="CENTER_LEFT" spacing="10">
+                <padding><Insets top="7" right="20" bottom="7" left="20"/></padding>
+                <Label text="NADAS v2.0  •  Alert History"
+                       styleClass="status-text"/>
+            </HBox>
+        </bottom>
+
+    </BorderPane>
+</StackPane>

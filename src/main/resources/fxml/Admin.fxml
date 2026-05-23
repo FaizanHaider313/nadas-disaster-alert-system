@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.ImageView?>
+<?import com.disaster.alert.util.ParticleNetworkCanvas?>
+
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.disaster.alert.controller.AdminController"
+           stylesheets="@/css/dashboard.css"
+           styleClass="dashboard-root"
+           maxWidth="Infinity" maxHeight="Infinity">
+
+    <ParticleNetworkCanvas/>
+
+    <BorderPane maxWidth="Infinity" maxHeight="Infinity"
+                style="-fx-background-color: transparent;">
+
+        <!-- TOP BAR -->
+        <top>
+            <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="14">
+                <padding><Insets top="13" right="25" bottom="13" left="25"/></padding>
+                <Label text="&#9881;"
+                       style="-fx-font-size: 22px;
+                              -fx-text-fill: rgba(100,200,255,0.9);
+                              -fx-effect: dropshadow(gaussian,rgba(100,200,255,0.7),12,0,0,0);"/>
+                <VBox spacing="1">
+                    <Label text="NADAS — Admin Panel"
+                           styleClass="app-title-dashboard"/>
+                    <Label text="Manage citizen reports and official alerts"
+                           styleClass="app-subtitle"/>
+                </VBox>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="&#8592; Back to Dashboard"
+                        onAction="#handleBackToDashboard"
+                        styleClass="nav-button"/>
+            </HBox>
+        </top>
+
+        <!-- MAIN CONTENT -->
+        <center>
+            <VBox spacing="16" style="-fx-background-color: transparent;">
+                <padding><Insets top="20" right="25" bottom="20" left="25"/></padding>
+
+                <!-- Stats Cards Row -->
+                <HBox spacing="16">
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS"
+                          style="-fx-background-color: rgba(255,255,255,0.05);
+                                 -fx-background-radius: 14px;
+                                 -fx-border-color: rgba(100,200,255,0.2) rgba(100,200,255,0.2) rgba(100,200,255,0.2) #4299e1;
+                                 -fx-border-width: 1px 1px 1px 3px;
+                                 -fx-border-radius: 14px;
+                                 -fx-effect: dropshadow(gaussian,rgba(0,80,180,0.3),16,0,0,4);
+                                 -fx-padding: 18px;">
+                        <Label text="Total Alerts in Feed"
+                               style="-fx-text-fill: white;
+                                      -fx-font-weight: bold;
+                                      -fx-font-size: 13px;"/>
+                        <Label fx:id="totalAlertsLabel" text="0"
+                               style="-fx-font-size: 32px;
+                                      -fx-font-weight: bold;
+                                      -fx-text-fill: #4299e1;
+                                      -fx-effect: dropshadow(gaussian,rgba(66,153,225,0.6),10,0,0,0);"/>
+                    </VBox>
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS"
+                          style="-fx-background-color: rgba(255,255,255,0.05);
+                                 -fx-background-radius: 14px;
+                                 -fx-border-color: rgba(100,200,255,0.2) rgba(100,200,255,0.2) rgba(100,200,255,0.2) #48bb78;
+                                 -fx-border-width: 1px 1px 1px 3px;
+                                 -fx-border-radius: 14px;
+                                 -fx-effect: dropshadow(gaussian,rgba(0,80,180,0.3),16,0,0,4);
+                                 -fx-padding: 18px;">
+                        <Label text="Total Citizen Reports"
+                               style="-fx-text-fill: white;
+                                      -fx-font-weight: bold;
+                                      -fx-font-size: 13px;"/>
+                        <Label fx:id="totalReportsLabel" text="0"
+                               style="-fx-font-size: 32px;
+                                      -fx-font-weight: bold;
+                                      -fx-text-fill: #68d391;
+                                      -fx-effect: dropshadow(gaussian,rgba(72,187,120,0.6),10,0,0,0);"/>
+                    </VBox>
+
+                    <VBox spacing="6" HBox.hgrow="ALWAYS"
+                          style="-fx-background-color: rgba(255,255,255,0.05);
+                                 -fx-background-radius: 14px;
+                                 -fx-border-color: rgba(100,200,255,0.2) rgba(100,200,255,0.2) rgba(100,200,255,0.2) #ed8936;
+                                 -fx-border-width: 1px 1px 1px 3px;
+                                 -fx-border-radius: 14px;
+                                 -fx-effect: dropshadow(gaussian,rgba(0,80,180,0.3),16,0,0,4);
+                                 -fx-padding: 18px;">
+                        <Label text="Pending Approval"
+                               style="-fx-text-fill: white;
+                                      -fx-font-weight: bold;
+                                      -fx-font-size: 13px;"/>
+                        <Label fx:id="pendingReportsLabel" text="0"
+                               style="-fx-font-size: 32px;
+                                      -fx-font-weight: bold;
+                                      -fx-text-fill: #ed8936;
+                                      -fx-effect: dropshadow(gaussian,rgba(237,137,54,0.6),10,0,0,0);"/>
+                    </VBox>
+
+                </HBox>
+
+                <!-- Legend row -->
+                <HBox spacing="16" alignment="CENTER_LEFT">
+                    <Label text="Status:"
+                           style="-fx-text-fill: white;
+                                  -fx-font-weight: bold;
+                                  -fx-font-size: 12px;"/>
+                    <Label text="  Pending  "
+                           style="-fx-background-color: rgba(255,200,50,0.15);
+                                  -fx-text-fill: #ecc94b;
+                                  -fx-padding: 3px 10px;
+                                  -fx-background-radius: 6px;
+                                  -fx-border-color: rgba(236,201,75,0.3);
+                                  -fx-border-radius: 6px;
+                                  -fx-border-width: 1px;
+                                  -fx-font-size: 11px;
+                                  -fx-font-weight: bold;"/>
+                    <Label text="  Approved  "
+                           style="-fx-background-color: rgba(72,187,120,0.15);
+                                  -fx-text-fill: #68d391;
+                                  -fx-padding: 3px 10px;
+                                  -fx-background-radius: 6px;
+                                  -fx-border-color: rgba(72,187,120,0.3);
+                                  -fx-border-radius: 6px;
+                                  -fx-border-width: 1px;
+                                  -fx-font-size: 11px;
+                                  -fx-font-weight: bold;"/>
+                    <Label text="  Rejected  "
+                           style="-fx-background-color: rgba(252,129,129,0.15);
+                                  -fx-text-fill: #fc8181;
+                                  -fx-padding: 3px 10px;
+                                  -fx-background-radius: 6px;
+                                  -fx-border-color: rgba(252,129,129,0.3);
+                                  -fx-border-radius: 6px;
+                                  -fx-border-width: 1px;
+                                  -fx-font-size: 11px;
+                                  -fx-font-weight: bold;"/>
+                </HBox>
+
+                <!-- Table toolbar -->
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="&#128203;"
+                           style="-fx-font-size: 16px;
+                                  -fx-effect: dropshadow(gaussian,rgba(100,200,255,0.5),6,0,0,0);"/>
+                    <Label text="Citizen Hazard Reports"
+                           styleClass="section-title"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button text="&#128260;  Refresh"
+                            onAction="#handleRefresh"
+                            styleClass="nav-button"/>
+                    <Button text="&#10003;  Approve"
+                            onAction="#handleApprove"
+                            style="-fx-background-color: linear-gradient(to right,rgba(72,187,120,0.85),rgba(47,133,90,0.85));
+                                   -fx-text-fill: white;
+                                   -fx-background-radius: 8px;
+                                   -fx-padding: 8px 18px;
+                                   -fx-font-weight: bold;
+                                   -fx-cursor: hand;
+                                   -fx-border-color: rgba(72,187,120,0.4);
+                                   -fx-border-radius: 8px;
+                                   -fx-border-width: 1px;
+                                   -fx-effect: dropshadow(gaussian,rgba(72,187,120,0.4),10,0,0,3);"/>
+                    <Button text="&#10006;  Reject"
+                            onAction="#handleReject"
+                            style="-fx-background-color: linear-gradient(to right,rgba(220,50,50,0.85),rgba(160,20,20,0.85));
+                                   -fx-text-fill: white;
+                                   -fx-background-radius: 8px;
+                                   -fx-padding: 8px 18px;
+                                   -fx-font-weight: bold;
+                                   -fx-cursor: hand;
+                                   -fx-border-color: rgba(255,100,100,0.4);
+                                   -fx-border-radius: 8px;
+                                   -fx-border-width: 1px;
+                                   -fx-effect: dropshadow(gaussian,rgba(220,50,50,0.4),10,0,0,3);"/>
+                </HBox>
+
+                <!-- Reports Table -->
+                <TableView fx:id="reportsTable"
+                           styleClass="alerts-table"
+                           VBox.vgrow="ALWAYS"
+                           maxHeight="Infinity" maxWidth="Infinity">
+                    <columns>
+                        <TableColumn fx:id="idColumn"
+                                     text="ID"          prefWidth="55"/>
+                        <TableColumn fx:id="typeColumn"
+                                     text="Hazard Type" prefWidth="130"/>
+                        <TableColumn fx:id="locationColumn"
+                                     text="Location"    prefWidth="160"/>
+                        <TableColumn fx:id="statusColumn"
+                                     text="Status"      prefWidth="100"/>
+                        <TableColumn fx:id="timeColumn"
+                                     text="Submitted"   prefWidth="155"/>
+                        <TableColumn fx:id="descColumn"
+                                     text="Description" prefWidth="340"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="No citizen reports yet."
+                               styleClass="table-placeholder"/>
+                    </placeholder>
+                </TableView>
+
+                <!-- Photo Preview -->
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="&#128247; Report Photo:"
+                           style="-fx-text-fill: white;
+                                  -fx-font-weight: bold;
+                                  -fx-font-size: 12px;"/>
+                    <ImageView fx:id="reportImageView"
+                               fitWidth="300" fitHeight="200"
+                               preserveRatio="true"
+                               visible="false"/>
+                </HBox>
+
+                <Label fx:id="statusLabel" text=""
+                       visible="false" wrapText="true"/>
+
+            </VBox>
+        </center>
+
+        <!-- STATUS BAR -->
+        <bottom>
+            <HBox styleClass="status-bar" alignment="CENTER_LEFT" spacing="10">
+                <padding><Insets top="7" right="20" bottom="7" left="20"/></padding>
+                <Label text="NADAS v2.0  •  Admin Panel"
+                       styleClass="status-text"/>
+            </HBox>
+        </bottom>
+
+    </BorderPane>
+</StackPane>

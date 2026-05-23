@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.disaster.alert.controller.ChatbotController"
+      styleClass="chatbot-panel"
+      stylesheets="@/css/chatbot.css"
+      spacing="0"
+      maxHeight="Infinity"
+      fillWidth="true">
+
+    <!-- ── HEADER ─────────────────────────────────── -->
+    <HBox styleClass="chatbot-header" alignment="CENTER_LEFT" spacing="10">
+        <padding><Insets top="12" right="14" bottom="12" left="14"/></padding>
+        <Label text="&#129302;"
+               style="-fx-font-size: 18px;
+                      -fx-effect: dropshadow(gaussian,rgba(100,200,255,0.6),8,0,0,0);"/>
+        <VBox spacing="1">
+            <Label text="NADAS Assistant" styleClass="chatbot-title"/>
+            <Label text="AI-powered disaster safety guide"
+                   styleClass="chatbot-subtitle"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Label fx:id="statusLabel" text="● Online"
+               styleClass="chat-status-online"/>
+    </HBox>
+
+    <!-- ── QUICK SUGGESTION CHIPS ────────────────── -->
+    <VBox spacing="6"
+          style="-fx-background-color: rgba(255,255,255,0.02);
+                 -fx-border-color: transparent transparent rgba(100,200,255,0.1) transparent;
+                 -fx-border-width: 0 0 1px 0;">
+        <padding><Insets top="8" right="10" bottom="8" left="10"/></padding>
+        <Label text="Quick questions:"
+               style="-fx-text-fill: rgba(100,200,255,0.5);
+                      -fx-font-size: 10px;
+                      -fx-font-weight: bold;"/>
+        <FlowPane hgap="6" vgap="6">
+            <Button text="🌍 Earthquake"
+                    onAction="#handleChipEarthquake"
+                    styleClass="chip-btn"/>
+            <Button text="🌊 Flood"
+                    onAction="#handleChipFlood"
+                    styleClass="chip-btn"/>
+            <Button text="🔥 Fire"
+                    onAction="#handleChipFire"
+                    styleClass="chip-btn"/>
+            <Button text="🎒 Emergency Kit"
+                    onAction="#handleChipKit"
+                    styleClass="chip-btn"/>
+        </FlowPane>
+    </VBox>
+
+    <!-- ── MESSAGES AREA ──────────────────────────── -->
+    <ScrollPane fx:id="chatScroll"
+                styleClass="chat-scroll"
+                fitToWidth="true"
+                VBox.vgrow="ALWAYS">
+        <VBox fx:id="messagesBox" spacing="8"
+              style="-fx-background-color: transparent;">
+            <padding><Insets top="10" right="6" bottom="10" left="6"/></padding>
+        </VBox>
+    </ScrollPane>
+
+    <!-- ── INPUT AREA ─────────────────────────────── -->
+    <HBox styleClass="chat-input-area" alignment="CENTER" spacing="8">
+        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+        <TextField fx:id="chatInput"
+                   promptText="Ask about disaster safety..."
+                   styleClass="chat-input"
+                   HBox.hgrow="ALWAYS">
+            <font><Font size="12"/></font>
+        </TextField>
+        <Button fx:id="sendButton"
+                text="&#10148;"
+                onAction="#handleSend"
+                styleClass="chat-send-btn"/>
+    </HBox>
+
+</VBox>
