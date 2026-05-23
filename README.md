@@ -109,7 +109,7 @@ Developed as a Software Design & Analysis (CS-3004) semester project at FAST-NUC
 
 ## Watch on LinkedIn
 
-[Click Here](https://www.linkedin.com/feed/update/urn:li:ugcPost:7464036569637838848/)
+[Application Walkthrough](https://www.linkedin.com/feed/update/urn:li:ugcPost:7464036569637838848/)
 
 ## Project Structure
 
