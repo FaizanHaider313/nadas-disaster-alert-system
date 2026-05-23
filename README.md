@@ -2,7 +2,7 @@
 
 NADAS is a real-time desktop application developed for monitoring, reporting, and responding to natural and artificial disasters across Pakistan.
 
-Developed as a Software Design & Architecture (CS-3004) semester project at FAST-NUCES Islamabad.
+Developed as a Software Design & Analysis (CS-3004) semester project at FAST-NUCES Islamabad.
 
 ---
 
@@ -106,6 +106,10 @@ Developed as a Software Design & Architecture (CS-3004) semester project at FAST
 ![Admin](screenshots/receive_email.png)
 
 ---
+
+## Watch on LinkedIn
+
+[Click Here](https://www.linkedin.com/feed/update/urn:li:ugcPost:7464036569637838848/)
 
 ## Project Structure
 
